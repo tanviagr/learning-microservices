@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.helloworld;
 
 public class HelloWorldBean {
 	private String message;
