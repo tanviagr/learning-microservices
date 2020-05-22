@@ -21,7 +21,9 @@ public class UserController {
 	//retrieveAllUsers
 	@GetMapping(path = "/users")
 	public List<User> getAllUsers() {
-		return service.findAll();
+		List<User> users = service.findAll();
+		if (users.size() == 0) throw new UsersNotFoundException("No users created");
+		return users;
 	}
 	
 	//retrieve one user
@@ -41,6 +43,6 @@ public class UserController {
 				.path("{id}")
 				.buildAndExpand(savedUser.getId())
 				.toUri();
-		return ResponseEntity.created(location).build();
+		return ResponseEntity.created(location).build(); //goes in the header
 	}
 }

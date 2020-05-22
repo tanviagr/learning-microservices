@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.example.demo.user.UserNotFoundException;
+import com.example.demo.user.UsersNotFoundException;
+
 @RestController //because it is providing a response back in case of exceptions
 @ControllerAdvice //i want this to be applicable to all other controllers 
 public class CustomizedResponseEntityExceptionHandler
@@ -27,4 +30,17 @@ extends ResponseEntityExceptionHandler{
 	//and returned a new responseEntity which was already in the method definition by passing the response and
 	//the status code of internal server error for all exceptions right now.
 	//we overrode the original responseEntity structure of the exceptions.
+	
+	@ExceptionHandler(UserNotFoundException.class)
+	public final ResponseEntity<Object> handleUserNotFoundException(Exception ex, WebRequest request) {
+		//the ex.getMessage() is being defined in the UserNotFoundException class.
+		ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(), request.getDescription(false));
+		return new ResponseEntity(exceptionResponse, HttpStatus.NOT_FOUND);
+	}
+	
+	@ExceptionHandler(UsersNotFoundException.class)
+	public final ResponseEntity<Object> handleUsersNotFoundException(Exception ex, WebRequest request) {
+		ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(), request.getDescription(false));
+		return new ResponseEntity(exceptionResponse, HttpStatus.NO_CONTENT);
+	}
 }

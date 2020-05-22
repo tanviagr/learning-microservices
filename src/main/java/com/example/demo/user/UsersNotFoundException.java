@@ -3,12 +3,11 @@ package com.example.demo.user;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ResponseStatus(HttpStatus.NOT_FOUND)
-public class UserNotFoundException extends RuntimeException {
+@ResponseStatus(HttpStatus.NO_CONTENT)
+public class UsersNotFoundException extends RuntimeException {
 
-	public UserNotFoundException(String message) {
+	public UsersNotFoundException(String message) {
 		super(message);
 	}
 
-	
 }

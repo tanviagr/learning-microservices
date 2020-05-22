@@ -10,11 +10,11 @@ import org.springframework.stereotype.Component;
 public class UserDAOService {
 	private static List<User> users = new ArrayList<User>();
 	private static int userCount = 3;
-	static {
-		users.add(new User(1, "Adam", new Date()));
-		users.add(new User(2, "Beth", new Date()));
-		users.add(new User(3, "Cynthia", new Date()));
-	}
+//	static {
+//		users.add(new User(1, "Adam", new Date()));
+//		users.add(new User(2, "Beth", new Date()));
+//		users.add(new User(3, "Cynthia", new Date()));
+//	}
 	
 	public List<User> findAll() {
 		return users;
