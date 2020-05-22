@@ -27,7 +27,9 @@ public class UserController {
 	//retrieve one user
 	@GetMapping(path = "/users/{id}")
 	public User getUser(@PathVariable Integer id) {
-		return service.findOne(id);
+		User user = service.findOne(id);
+		if (user == null) throw new UserNotFoundException(String.format("id = %s", id));
+		return user;
 	}
 	
 	//create a user
