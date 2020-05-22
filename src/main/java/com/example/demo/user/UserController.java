@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -44,5 +45,14 @@ public class UserController {
 				.buildAndExpand(savedUser.getId())
 				.toUri();
 		return ResponseEntity.created(location).build(); //goes in the header
+	}
+	
+	//delete a user
+	//for this, we can either return a no-content ResponseEntity, or return void to signify success at deleting the resource.
+	@DeleteMapping(path = "/users/{id}")
+	public ResponseEntity<Object> deleteUser(@PathVariable int id) {
+		User user = service.deleteOne(id);
+		if (user == null) throw new UserNotFoundException("id = " + id);
+		return ResponseEntity.noContent().build();
 	}
 }
