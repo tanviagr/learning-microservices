@@ -3,6 +3,8 @@ package com.example.demo.user;
 import java.net.URI;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -37,14 +39,14 @@ public class UserController {
 	
 	//create a user
 	@PostMapping(path = "/users")
-	public ResponseEntity<Object> createUser(@RequestBody User user) {
+	public ResponseEntity<Object> createUser(@Valid @RequestBody User user) {
 		User savedUser = service.saveUser(user);
 		URI location = ServletUriComponentsBuilder
 				.fromCurrentRequest()
 				.path("{id}")
 				.buildAndExpand(savedUser.getId())
 				.toUri();
-		return ResponseEntity.created(location).build(); //goes in the header
+		return ResponseEntity.created(location).build(); //goes in the header, returns the status code CREATED
 	}
 	
 	//delete a user
@@ -53,6 +55,6 @@ public class UserController {
 	public ResponseEntity<Object> deleteUser(@PathVariable int id) {
 		User user = service.deleteOne(id);
 		if (user == null) throw new UserNotFoundException("id = " + id);
-		return ResponseEntity.noContent().build();
+		return ResponseEntity.noContent().build(); //return status code NO_CONTENT
 	}
 }
