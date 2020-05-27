@@ -6,6 +6,8 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Link;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,6 +36,10 @@ public class UserController {
 	public User getUser(@PathVariable Integer id) {
 		User user = service.findOne(id);
 		if (user == null) throw new UserNotFoundException(String.format("id = %s", id));
+//		Link link = new Link("http://localhost:8080/users/1");
+//		The WebMvcLinkBuilder class methods are imported statically
+		Link link = linkTo(UserController.class).slash(user.getId()).withSelfRel();
+		user.add(link);
 		return user;
 	}
 	
