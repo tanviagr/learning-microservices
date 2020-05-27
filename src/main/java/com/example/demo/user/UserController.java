@@ -1,6 +1,7 @@
 package com.example.demo.user;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.net.URI;
 import java.util.List;
@@ -8,6 +9,8 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,24 +31,35 @@ public class UserController {
 	
 	//retrieveAllUsers
 	@GetMapping(path = "")
-	public List<User> getAllUsers() {
+	public CollectionModel<User> getAllUsers() {
 		List<User> users = service.findAll();
 		if (users.size() == 0) throw new UsersNotFoundException("No users created");
-		return users;
+		for (User user : users) {
+			EntityModel<User> model = new EntityModel<>(user);
+			user.add(linkTo(UserController.class).slash(user.getId()).withSelfRel());
+		}
+		Link selfLink = linkTo(UserController.class).withSelfRel();
+		CollectionModel<User> result = new CollectionModel<>(users, selfLink);
+		return result;
 	}
 	
 	//retrieve one user
 	@GetMapping(path = "/{id}")
-	public User getUser(@PathVariable Integer id) {
+	public EntityModel<User> getUser(@PathVariable Integer id) {
 		User user = service.findOne(id);
 		if (user == null) throw new UserNotFoundException(String.format("id = %s", id));
-//		Link link = new Link("http://localhost:8080/users/1");
+		
+//		Link link = new Link("http://localhost:8080/users/1"); -> hard coding links
 //		The WebMvcLinkBuilder class methods are imported statically
-		Link selfLink = linkTo(UserController.class).slash(user.getId()).withSelfRel();
+		
+		EntityModel<User> model = new EntityModel<>(user);
+		Link selfLink = linkTo(UserController.class).slash(user.getId()).withSelfRel(); 
 		Link allUsers = linkTo(methodOn(UserController.class).getAllUsers()).withRel("all users");
-		user.add(selfLink);
-		user.add(allUsers);
-		return user;
+		
+		model.add(selfLink);
+		model.add(allUsers);
+		
+		return model;
 	}
 	
 	//create a user
