@@ -68,7 +68,7 @@ public class UserController {
 		User savedUser = service.saveUser(user);
 		URI location = ServletUriComponentsBuilder
 				.fromCurrentRequest()
-				.path("{id}")
+				.path("/{id}")
 				.buildAndExpand(savedUser.getId())
 				.toUri();
 		return ResponseEntity.created(location).build(); //goes in the header, returns the status code CREATED
