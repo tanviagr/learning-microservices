@@ -22,13 +22,5 @@ public class DemoApplication {
 		localeResolver.setDefaultLocale(Locale.US);
 		return localeResolver;
 	}
-	
-	@Bean
-	public ResourceBundleMessageSource messageSource() {
-		ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
-		messageSource.setBasename("messages");
-		//our internationalization files are called "messages.properties" and "messages.fr.properties"
-		return messageSource;
-	}
 
 }

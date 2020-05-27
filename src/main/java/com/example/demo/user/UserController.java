@@ -31,16 +31,10 @@ public class UserController {
 	
 	//retrieveAllUsers
 	@GetMapping(path = "")
-	public CollectionModel<User> getAllUsers() {
+	public List<User> getAllUsers() {
 		List<User> users = service.findAll();
 		if (users.size() == 0) throw new UsersNotFoundException("No users created");
-		for (User user : users) {
-			EntityModel<User> model = new EntityModel<>(user);
-			user.add(linkTo(UserController.class).slash(user.getId()).withSelfRel());
-		}
-		Link selfLink = linkTo(UserController.class).withSelfRel();
-		CollectionModel<User> result = new CollectionModel<>(users, selfLink);
-		return result;
+		return users;
 	}
 	
 	//retrieve one user
